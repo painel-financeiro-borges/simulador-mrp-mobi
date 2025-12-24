@@ -1,166 +1,262 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Simulador MRP Mobi - Fluxograma</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Simulador MRP Mobi - Fluxograma (Melhorado)</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-      padding: 20px;
+    :root{
+      --bg:#f4f6f8;
+      --card:#fff;
+      --accent:#0f5132;
+      --muted:#6b7280;
+      --shadow: 0 2px 10px rgba(2,6,23,0.06);
+      --radius:10px;
     }
-
-    h1 {
-      text-align: center;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:#0b1720;
+      padding:20px;
     }
-
-    .container {
-      max-width: 1000px;
-      margin: auto;
+    .container{
+      max-width:1100px;
+      margin:0 auto;
     }
-
-    .inputs {
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    h1{
+      text-align:center;
+      margin:8px 0 18px;
+      font-weight:600;
     }
-
-    .inputs label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:20px;
     }
-
-    .inputs input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
+    @media (max-width:800px){
+      .grid{grid-template-columns:1fr}
+      .fluxograma{flex-direction:column; gap:16px; align-items:stretch}
+      .arrow{display:none}
     }
-
-    .fluxograma {
-      display: flex;
-      justify-content: space-around;
-      text-align: center;
-      margin-top: 30px;
+    .card{
+      background:var(--card);
+      padding:18px;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
     }
-
-    .box {
-      background: #ffffff;
-      padding: 20px;
-      width: 250px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    .inputs label{
+      display:block;
+      font-weight:600;
+      margin-top:12px;
+      color:var(--muted);
+      font-size:13px;
     }
-
-    .arrow {
-      font-size: 30px;
-      margin-top: 40px;
+    .inputs input[type="number"]{
+      width:100%;
+      padding:10px 12px;
+      margin-top:6px;
+      border-radius:8px;
+      border:1px solid #e6e9ee;
+      font-size:15px;
+      background:white;
     }
-
-    .resultado {
-      background: #0f5132;
-      color: #ffffff;
-      padding: 20px;
-      margin-top: 30px;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 18px;
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-top:12px;
     }
+    .btn{
+      display:inline-block;
+      background:var(--accent);
+      color:white;
+      padding:10px 14px;
+      border-radius:8px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      box-shadow: 0 4px 14px rgba(15,81,50,0.12);
+    }
+    .fluxograma{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:10px;
+      align-items:center;
+    }
+    .box{
+      flex:1;
+      background:var(--card);
+      padding:16px;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .box h3{margin:0 0 6px}
+    .small{font-size:13px;color:var(--muted)}
+    .arrow{font-size:28px;color:var(--muted); margin:0 8px}
+    .resultado{
+      background:linear-gradient(90deg,#073d25,#0f5132);
+      color:white;
+      padding:14px;
+      margin-top:18px;
+      border-radius:10px;
+      text-align:center;
+      font-size:18px;
+      font-weight:700;
+    }
+    .breakdown{
+      margin-top:12px;
+      text-align:left;
+      font-size:14px;
+      color:#0b1720;
+    }
+    .muted-text{color:var(--muted); font-size:13px}
+    .note{font-size:13px;color:var(--muted); margin-top:8px}
   </style>
 </head>
-
 <body>
+  <div class="container">
+    <h1>Simulador MRP Mobi – Fluxograma</h1>
 
-<div class="container">
-  <h1>Simulador MRP Mobi – Modelo de Fluxograma</h1>
+    <div class="grid">
+      <div class="card inputs" aria-labelledby="form-title">
+        <h2 id="form-title" class="small">Entradas</h2>
 
-  <div class="inputs">
-    <label>Indicados diretos (1ª geração)</label>
-    <input type="number" id="g1" value="100">
+        <label for="g1">Indicados diretos (1ª geração)</label>
+        <input type="number" id="g1" min="0" step="1" value="100" aria-label="Indicados diretos">
 
-    <label>Indicados por pessoa (2ª geração)</label>
-    <input type="number" id="g2porPessoa" value="1">
+        <label for="g2porPessoa">Indicados por pessoa (2ª geração)</label>
+        <input type="number" id="g2porPessoa" min="0" step="0.01" value="1" aria-label="Indicados por pessoa">
 
-    <label>Corridas por pessoa / mês</label>
-    <input type="number" id="corridas" value="1">
+        <label for="corridas">Corridas por pessoa / mês</label>
+        <input type="number" id="corridas" min="0" step="0.01" value="1" aria-label="Corridas por pessoa por mês">
 
-    <label>Valor médio da corrida (R$)</label>
-    <input type="number" id="valorCorrida" value="10">
+        <label for="valorCorrida">Valor médio da corrida (R$)</label>
+        <input type="number" id="valorCorrida" min="0" step="0.01" value="10" aria-label="Valor médio da corrida">
 
-    <label>Comissão por geração (%)</label>
-    <input type="number" id="comissao" value="2">
+        <label for="comissao">Comissão (%)</label>
+        <input type="number" id="comissao" min="0" step="0.01" value="2" aria-label="Comissão percentual">
 
-    <br><br>
-    <button onclick="calcular()">Calcular</button>
+        <div class="row">
+          <button id="btnCalcular" class="btn" type="button">Calcular</button>
+          <button id="btnReset" class="btn" style="background:#6b7280">Resetar</button>
+        </div>
+
+        <p class="note">Alterações também recalculem automaticamente. Use os botões se preferir ação explícita.</p>
+      </div>
+
+      <div class="card">
+        <h2 class="small">Visualização do Fluxograma</h2>
+
+        <div class="fluxograma" role="group" aria-label="Fluxograma de gerações">
+          <div class="box" id="boxVocê">
+            <h3>Você</h3>
+            <p class="small">Início da rede</p>
+          </div>
+
+          <div class="arrow" aria-hidden="true">➡️</div>
+
+          <div class="box" id="boxG1">
+            <h3>1ª Geração</h3>
+            <p id="g1Texto" class="small">-</p>
+            <p id="ganhoG1" style="font-weight:600">-</p>
+          </div>
+
+          <div class="arrow" aria-hidden="true">➡️</div>
+
+          <div class="box" id="boxG2">
+            <h3>2ª Geração</h3>
+            <p id="g2Texto" class="small">-</p>
+            <p id="ganhoG2" style="font-weight:600">-</p>
+          </div>
+        </div>
+
+        <div class="breakdown" id="breakdown">
+          <!-- breakdown dinámico -->
+        </div>
+
+        <div class="resultado" id="resultadoFinal" role="status" aria-live="polite">
+          Total mensal estimado: R$ 0,00
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="fluxograma">
-    <div class="box">
-      <h3>Você</h3>
-      <p>Início da Rede</p>
-    </div>
+  <script>
+    (function(){
+      const el = id => document.getElementById(id);
+      const fmtBRL = new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'});
+      const fmtNum = new Intl.NumberFormat('pt-BR', {maximumFractionDigits:2, minimumFractionDigits:0});
 
-    <div class="arrow">➡️</div>
+      const inputs = ['g1','g2porPessoa','corridas','valorCorrida','comissao'].map(id => el(id));
+      const btnCalc = el('btnCalcular');
+      const btnReset = el('btnReset');
 
-    <div class="box">
-      <h3>1ª Geração</h3>
-      <p id="g1Texto">-</p>
-      <p id="ganhoG1">-</p>
-    </div>
+      function parsePositive(input){
+        const n = Number(input);
+        if (!isFinite(n) || n < 0) return 0;
+        return n;
+      }
 
-    <div class="arrow">➡️</div>
+      function calcular(){
+        const g1 = Math.floor(parsePositive(el('g1').value));
+        const g2porPessoa = parsePositive(el('g2porPessoa').value);
+        const corridas = parsePositive(el('corridas').value);
+        const valor = parsePositive(el('valorCorrida').value);
+        const comissao = parsePositive(el('comissao').value) / 100;
 
-    <div class="box">
-      <h3>2ª Geração</h3>
-      <p id="g2Texto">-</p>
-      <p id="ganhoG2">-</p>
-    </div>
-  </div>
+        // cálculo
+        const g2 = g1 * g2porPessoa;
+        const ganhoPorCorrida = valor * comissao;
 
-  <div class="resultado" id="resultadoFinal">
-    Total mensal estimado: R$ 0,00
-  </div>
-</div>
+        const ganhoG1 = g1 * corridas * ganhoPorCorrida;
+        const ganhoG2 = g2 * corridas * ganhoPorCorrida;
+        const total = ganhoG1 + ganhoG2;
 
-<script>
-function calcular() {
-  const g1 = Number(document.getElementById("g1").value);
-  const g2porPessoa = Number(document.getElementById("g2porPessoa").value);
-  const corridas = Number(document.getElementById("corridas").value);
-  const valor = Number(document.getElementById("valorCorrida").value);
-  const comissao = Number(document.getElementById("comissao").value) / 100;
+        // atualizar UI
+        el('g1Texto').innerText = `${g1.toLocaleString('pt-BR')} pessoas × ${corridas.toLocaleString('pt-BR')} corridas`;
+        el('ganhoG1').innerText = `Ganho: ${fmtBRL.format(ganhoG1)}`;
 
-  const g2 = g1 * g2porPessoa;
+        el('g2Texto').innerText = `${g2.toLocaleString('pt-BR')} pessoas × ${corridas.toLocaleString('pt-BR')} corridas`;
+        el('ganhoG2').innerText = `Ganho: ${fmtBRL.format(ganhoG2)}`;
 
-  const ganhoPorCorrida = valor * comissao;
+        el('resultadoFinal').innerText = `Total mensal estimado: ${fmtBRL.format(total)}`;
 
-  const ganhoG1 = g1 * corridas * ganhoPorCorrida;
-  const ganhoG2 = g2 * corridas * ganhoPorCorrida;
+        // breakdown detalhado
+        el('breakdown').innerHTML = `
+          <div class="muted-text">Detalhamento</div>
+          <div>Comissão aplicada por corrida: ${ (comissao*100).toLocaleString('pt-BR', {maximumFractionDigits:2}) }%</div>
+          <div>Valor por corrida (comissão): ${fmtBRL.format(ganhoPorCorrida)}</div>
+          <div style="margin-top:8px">1ª geração: ${g1.toLocaleString('pt-BR')} pessoas — Ganho ${fmtBRL.format(ganhoG1)}</div>
+          <div>2ª geração: ${g2.toLocaleString('pt-BR')} pessoas — Ganho ${fmtBRL.format(ganhoG2)}</div>
+        `;
+      }
 
-  document.getElementById("g1Texto").innerText =
-    `${g1} pessoas × ${corridas} corridas`;
+      // recalcula automaticamente ao alterar qualquer campo (com debounce)
+      let timer;
+      inputs.forEach(i => {
+        i.addEventListener('input', () => {
+          clearTimeout(timer);
+          timer = setTimeout(calcular, 250);
+        });
+      });
 
-  document.getElementById("ganhoG1").innerText =
-    `Ganho: R$ ${ganhoG1.toFixed(2)}`;
+      btnCalc.addEventListener('click', calcular);
+      btnReset.addEventListener('click', () => {
+        el('g1').value = 100;
+        el('g2porPessoa').value = 1;
+        el('corridas').value = 1;
+        el('valorCorrida').value = 10;
+        el('comissao').value = 2;
+        calcular();
+      });
 
-  document.getElementById("g2Texto").innerText =
-    `${g2} pessoas × ${corridas} corridas`;
-
-  document.getElementById("ganhoG2").innerText =
-    `Ganho: R$ ${ganhoG2.toFixed(2)}`;
-
-  const total = ganhoG1 + ganhoG2;
-
-  document.getElementById("resultadoFinal").innerText =
-    `Total mensal estimado: R$ ${total.toFixed(2)}`;
-}
-
-// cálculo inicial automático
-calcular();
-</script>
-
+      // inicial
+      calcular();
+    })();
+  </script>
 </body>
-</html>
+        </html>
