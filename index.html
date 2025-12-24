@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulador MRP Mobi - Fluxograma</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .inputs {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .inputs label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .inputs input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+
+    .fluxograma {
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .box {
+      background: #ffffff;
+      padding: 20px;
+      width: 250px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .arrow {
+      font-size: 30px;
+      margin-top: 40px;
+    }
+
+    .resultado {
+      background: #0f5132;
+      color: #ffffff;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Simulador MRP Mobi – Modelo de Fluxograma</h1>
+
+  <div class="inputs">
+    <label>Indicados diretos (1ª geração)</label>
+    <input type="number" id="g1" value="100">
+
+    <label>Indicados por pessoa (2ª geração)</label>
+    <input type="number" id="g2porPessoa" value="1">
+
+    <label>Corridas por pessoa / mês</label>
+    <input type="number" id="corridas" value="1">
+
+    <label>Valor médio da corrida (R$)</label>
+    <input type="number" id="valorCorrida" value="10">
+
+    <label>Comissão por geração (%)</label>
+    <input type="number" id="comissao" value="2">
+
+    <br><br>
+    <button onclick="calcular()">Calcular</button>
+  </div>
+
+  <div class="fluxograma">
+    <div class="box">
+      <h3>Você</h3>
+      <p>Início da Rede</p>
+    </div>
+
+    <div class="arrow">➡️</div>
+
+    <div class="box">
+      <h3>1ª Geração</h3>
+      <p id="g1Texto">-</p>
+      <p id="ganhoG1">-</p>
+    </div>
+
+    <div class="arrow">➡️</div>
+
+    <div class="box">
+      <h3>2ª Geração</h3>
+      <p id="g2Texto">-</p>
+      <p id="ganhoG2">-</p>
+    </div>
+  </div>
+
+  <div class="resultado" id="resultadoFinal">
+    Total mensal estimado: R$ 0,00
+  </div>
+</div>
+
+<script>
+function calcular() {
+  const g1 = Number(document.getElementById("g1").value);
+  const g2porPessoa = Number(document.getElementById("g2porPessoa").value);
+  const corridas = Number(document.getElementById("corridas").value);
+  const valor = Number(document.getElementById("valorCorrida").value);
+  const comissao = Number(document.getElementById("comissao").value) / 100;
+
+  const g2 = g1 * g2porPessoa;
+
+  const ganhoPorCorrida = valor * comissao;
+
+  const ganhoG1 = g1 * corridas * ganhoPorCorrida;
+  const ganhoG2 = g2 * corridas * ganhoPorCorrida;
+
+  document.getElementById("g1Texto").innerText =
+    `${g1} pessoas × ${corridas} corridas`;
+
+  document.getElementById("ganhoG1").innerText =
+    `Ganho: R$ ${ganhoG1.toFixed(2)}`;
+
+  document.getElementById("g2Texto").innerText =
+    `${g2} pessoas × ${corridas} corridas`;
+
+  document.getElementById("ganhoG2").innerText =
+    `Ganho: R$ ${ganhoG2.toFixed(2)}`;
+
+  const total = ganhoG1 + ganhoG2;
+
+  document.getElementById("resultadoFinal").innerText =
+    `Total mensal estimado: R$ ${total.toFixed(2)}`;
+}
+
+// cálculo inicial automático
+calcular();
+</script>
+
+</body>
+</html>
